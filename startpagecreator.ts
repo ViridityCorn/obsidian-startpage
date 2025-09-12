@@ -518,10 +518,17 @@ export default class StartPageCreator {
 	}
 
 	getTotalSize(): number {
-		const markdownFiles: TFile[] = this.app.vault.getMarkdownFiles();
+		var files: TFile[];
+
+		if(this.plugin.settings.totalSizeAllFiles){
+			files = this.app.vault.getFiles()
+		}else{
+			files = this.app.vault.getMarkdownFiles();
+		}
+
 		let totalSize: number = 0;
 
-		markdownFiles.forEach((file) => {
+		files.forEach((file) => {
 			totalSize += file.stat.size;
 		});
 

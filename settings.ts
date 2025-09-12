@@ -5,6 +5,7 @@ import { t } from "./i18n";
 import NoteSuggestModal from "./notesuggestmodal";
 
 export interface StartPageSettings {
+	totalSizeAllFiles: boolean;
 	includeAllFilesInRecent: boolean;
 	recentNotesLimit: number;
 	pinnedNotes: string[];
@@ -12,6 +13,7 @@ export interface StartPageSettings {
 }
 
 export const DEFAULT_SETTINGS: StartPageSettings = {
+	totalSizeAllFiles: false,
 	includeAllFilesInRecent: false,
 	recentNotesLimit: 10,
 	pinnedNotes: [],
@@ -49,6 +51,17 @@ export class StartPageSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
+
+		new Setting(containerEl)
+			.setName(t("total_size_all_files"))
+			.setDesc(t("total_size_all_files_desc"))
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.totalSizeAllFiles);
+				toggle.onChange(async (value) => {
+					this.plugin.settings.totalSizeAllFiles = value;
+					await this.plugin.saveSettings();
+				});
+			});
 
 		new Setting(containerEl)
 			.setName(t("include_all_files_in_recent"))
